@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Legacy Knowledge Hub</title>
+    
+    <style type="text/css">
+        /* CORE STYLES FOR iOS 5.1.1 */
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 15px;
+            background-color: #f0f0f5;
+            color: #333333;
+            line-height: 1.4;
+            -webkit-text-size-adjust: none;
+        }
+
+        h1 {
+            font-size: 22px;
+            text-align: center;
+            text-shadow: 0px 1px 0px #fff;
+            margin-bottom: 15px;
+        }
+
+        h2 {
+            font-size: 18px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+
+        /* CONTAINER CARD */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 15px;
+            border: 1px solid #dcdcdc;
+            -webkit-border-radius: 8px;
+            border-radius: 8px; 
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* INPUTS & BUTTONS */
+        input[type="text"] {
+            width: 94%; /* Safe margin for iPad 1 */
+            padding: 12px 5px; /* Larger touch target */
+            font-size: 18px; /* Readable without zooming */
+            border: 1px solid #999;
+            border-radius: 0; /* Standardize look */
+            -webkit-appearance: none; /* Remove iOS gloss */
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"], button.toggle-btn {
+            background-color: #007aff; 
+            background-image: -webkit-linear-gradient(top, #007aff, #005bb5);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 12px 20px;
+            border: 1px solid #005bb5;
+            border-radius: 5px;
+            -webkit-appearance: none;
+            cursor: pointer;
+        }
+        
+        input[type="submit"]:active {
+            background-image: -webkit-linear-gradient(top, #005bb5, #004488);
+        }
+
+        /* LINKS */
+        ul.quick-links { list-style: none; padding: 0; }
+        ul.quick-links li { margin-bottom: 10px; }
+        
+        a.q-link {
+            display: block;
+            background-color: #eee;
+            padding: 12px;
+            text-decoration: none;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* DARK MODE */
+        body.dark-mode { background-color: #222; color: #ddd; }
+        body.dark-mode .container { background-color: #333; border-color: #555; }
+        body.dark-mode h1 { text-shadow: none; color: #eee; }
+        body.dark-mode input[type="text"] { background-color: #555; color: #fff; border-color: #777; }
+        body.dark-mode a.q-link { background-color: #444; color: #fff; border-color: #666; }
+        
+        .note { font-size: 12px; color: #666; margin-top: 5px; }
+        body.dark-mode .note { color: #aaa; }
+    </style>
+
+    <script type="text/javascript">
+        // Dark Mode Toggle
+        function toggleTheme() {
+            var b = document.body;
+            if (b.className.indexOf('dark-mode') === -1) {
+                b.className = 'dark-mode';
+                document.getElementById('themeBtn').innerHTML = "Light Mode";
+            } else {
+                b.className = '';
+                document.getElementById('themeBtn').innerHTML = "Dark Mode";
+            }
+        }
+
+        // IMPROVED WIKIPEDIA SEARCH LOGIC
+        // Instead of guessing the article URL, we send the query to Wikipedia's SEARCH function.
+        // We then wrap that search URL inside Textise.
+        function prepareWiki() {
+            var userQuery = document.getElementById('wikiInput').value;
+            var hiddenField = document.getElementById('textiseUrl');
+
+            if (userQuery.length === 0) {
+                alert("Please type a topic.");
+                return false;
+            }
+
+            // 1. Create the Wikipedia Search URL (Safe for exact or fuzzy matches)
+            // We use encodeURIComponent to handle spaces and special characters safely.
+            var wikiSearchUrl = 'https://en.wikipedia.org/w/index.php?search=' + encodeURIComponent(userQuery) + '&title=Special%3ASearch&go=Go';
+
+            // 2. Set the hidden input to this URL. 
+            // Textise will now fetch the Search Results page, not a broken article link.
+            hiddenField.value = wikiSearchUrl;
+
+            return true; // Allow form submission
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+    
+    <header>
+        <h1>Legacy Knowledge Hub</h1>
+        <div style="text-align: center;">
+            <button id="themeBtn" class="toggle-btn" onclick="toggleTheme()">Dark Mode</button>
+        </div>
+    </header>
+
+    <section>
+        <h2>Web Search</h2>
+        <p class="note">DuckDuckGo Lite (Text-based)</p>
+        
+        <form action="http://lite.duckduckgo.com/lite/" method="get" target="_blank">
+            <input type="text" name="q" placeholder="Type search here..." autocorrect="off">
+            <input type="submit" value="Search Web">
+        </form>
+    </section>
+
+    <section>
+        <h2>Wikipedia Reader</h2>
+        <p class="note">Strips images/layout via Textise. Searches via Wiki Index.</p>
+        
+        <form action="http://textise.net/showtext.aspx" method="get" target="_blank" onsubmit="return prepareWiki()">
+            
+            <input type="text" id="wikiInput" placeholder="Topic (e.g. Einstein)" autocorrect="off">
+            
+            <input type="hidden" id="textiseUrl" name="strURL" value="">
+            
+            <br>
+            <input type="submit" value="Read Wiki">
+        </form>
+    </section>
+
+    <section>
+        <h2>Quick Access</h2>
+        <ul class="quick-links">
+            <li><a href="http://lite.duckduckgo.com/lite/?q=latest+science+news" target="_blank" class="q-link">Science News</a></li>
+            <li><a href="http://lite.duckduckgo.com/lite/?q=world+history" target="_blank" class="q-link">World History</a></li>
+            <li><a href="http://lite.duckduckgo.com/lite/?q=diy+repair+guides" target="_blank" class="q-link">DIY & Repair</a></li>
+        </ul>
+    </section>
+
+    <div style="margin-top:20px; text-align:center; font-size:11px; color:#aaa;">
+        v1.1 | iOS 5.1.1 Optimized
+    </div>
+
+</div>
+
+</body>
+</html>
