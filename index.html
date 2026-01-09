@@ -3,136 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Legacy Knowledge Hub</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>Legacy Hub Stable</title>
     
     <style type="text/css">
-        /* CORE STYLES FOR iOS 5.1.1 */
+        /* STABLE VERSION STYLING (Clean & Fast) */
         body {
             font-family: Helvetica, Arial, sans-serif;
             margin: 0;
-            padding: 15px;
+            padding: 20px;
             background-color: #f0f0f5;
-            color: #333333;
-            line-height: 1.4;
+            color: #333;
             -webkit-text-size-adjust: none;
         }
 
         h1 {
-            font-size: 22px;
+            font-size: 24px;
             text-align: center;
+            margin-bottom: 20px;
             text-shadow: 0px 1px 0px #fff;
-            margin-bottom: 15px;
         }
 
         h2 {
             font-size: 18px;
             border-bottom: 1px solid #ccc;
             padding-bottom: 5px;
-            margin-top: 25px;
-            margin-bottom: 15px;
+            margin-top: 30px;
         }
 
-        /* CONTAINER CARD */
         .container {
             max-width: 700px;
             margin: 0 auto;
             background-color: #ffffff;
-            padding: 15px;
+            padding: 20px;
             border: 1px solid #dcdcdc;
-            -webkit-border-radius: 8px;
-            border-radius: 8px; 
-            box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+            -webkit-border-radius: 10px;
+            border-radius: 10px; 
+            box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* INPUTS & BUTTONS */
         input[type="text"] {
-            width: 94%; /* Safe margin for iPad 1 */
-            padding: 12px 5px; /* Larger touch target */
-            font-size: 18px; /* Readable without zooming */
+            width: 90%;
+            padding: 10px;
+            font-size: 16px;
             border: 1px solid #999;
-            border-radius: 0; /* Standardize look */
-            -webkit-appearance: none; /* Remove iOS gloss */
+            -webkit-border-radius: 5px;
+            border-radius: 5px;
             margin-bottom: 10px;
+            display: block;
+            -webkit-appearance: none; 
         }
 
         input[type="submit"], button.toggle-btn {
-            background-color: #007aff; 
+            background-color: #007aff;
             background-image: -webkit-linear-gradient(top, #007aff, #005bb5);
             color: white;
             font-size: 16px;
             font-weight: bold;
             padding: 12px 20px;
             border: 1px solid #005bb5;
+            -webkit-border-radius: 5px;
             border-radius: 5px;
-            -webkit-appearance: none;
             cursor: pointer;
+            -webkit-appearance: none;
+            display: inline-block;
         }
         
         input[type="submit"]:active {
             background-image: -webkit-linear-gradient(top, #005bb5, #004488);
         }
 
-        /* LINKS */
         ul.quick-links { list-style: none; padding: 0; }
         ul.quick-links li { margin-bottom: 10px; }
-        
+
         a.q-link {
             display: block;
-            background-color: #eee;
-            padding: 12px;
+            background-color: #e8e8e8;
+            padding: 15px;
             text-decoration: none;
             color: #333;
             border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 16px;
+            -webkit-border-radius: 8px;
+            border-radius: 8px;
             font-weight: bold;
         }
+        a.q-link:active { background-color: #d0d0d0; }
+
+        .note { font-size: 12px; color: #666; font-style: italic; }
 
         /* DARK MODE */
-        body.dark-mode { background-color: #222; color: #ddd; }
-        body.dark-mode .container { background-color: #333; border-color: #555; }
-        body.dark-mode h1 { text-shadow: none; color: #eee; }
-        body.dark-mode input[type="text"] { background-color: #555; color: #fff; border-color: #777; }
-        body.dark-mode a.q-link { background-color: #444; color: #fff; border-color: #666; }
-        
-        .note { font-size: 12px; color: #666; margin-top: 5px; }
-        body.dark-mode .note { color: #aaa; }
+        body.dark-mode { background-color: #1a1a1a; color: #e0e0e0; }
+        body.dark-mode .container { background-color: #2b2b2b; border-color: #444; box-shadow: none; }
+        body.dark-mode h1 { text-shadow: none; color: #fff; }
+        body.dark-mode input[type="text"] { background-color: #444; color: #fff; border-color: #666; }
+        body.dark-mode a.q-link { background-color: #333; color: #fff; border-color: #555; }
     </style>
 
     <script type="text/javascript">
-        // Dark Mode Toggle
         function toggleTheme() {
             var b = document.body;
+            var btn = document.getElementById('themeBtn');
             if (b.className.indexOf('dark-mode') === -1) {
                 b.className = 'dark-mode';
-                document.getElementById('themeBtn').innerHTML = "Light Mode";
+                btn.innerHTML = "Switch to Light Mode";
             } else {
                 b.className = '';
-                document.getElementById('themeBtn').innerHTML = "Dark Mode";
+                btn.innerHTML = "Switch to Dark Mode";
             }
         }
 
-        // IMPROVED WIKIPEDIA SEARCH LOGIC
-        // Instead of guessing the article URL, we send the query to Wikipedia's SEARCH function.
-        // We then wrap that search URL inside Textise.
-        function prepareWiki() {
-            var userQuery = document.getElementById('wikiInput').value;
+        // Wikipedia Search Logic
+        function submitWiki() {
+            var topic = document.getElementById('wikiInput').value;
             var hiddenField = document.getElementById('textiseUrl');
-
-            if (userQuery.length === 0) {
+            
+            if (topic.length > 0) {
+                // Correctly formats the search for Textise Proxy
+                var searchUrl = 'https://en.wikipedia.org/w/index.php?search=' + encodeURIComponent(topic) + '&title=Special%3ASearch&fulltext=1';
+                hiddenField.value = searchUrl;
+                return true;
+            } else {
                 alert("Please type a topic.");
                 return false;
             }
-
-            // 1. Create the Wikipedia Search URL (Safe for exact or fuzzy matches)
-            // We use encodeURIComponent to handle spaces and special characters safely.
-            var wikiSearchUrl = 'https://en.wikipedia.org/w/index.php?search=' + encodeURIComponent(userQuery) + '&title=Special%3ASearch&go=Go';
-
-            // 2. Set the hidden input to this URL. 
-            // Textise will now fetch the Search Results page, not a broken article link.
-            hiddenField.value = wikiSearchUrl;
-
-            return true; // Allow form submission
         }
     </script>
 </head>
@@ -141,79 +136,57 @@
 <div class="container">
     
     <header>
-        <h1>Legacy Knowledge Hub</h1>
-        <div style="text-align: center;">
-            <button id="themeBtn" class="toggle-btn" onclick="toggleTheme()">Dark Mode</button>
+        <h1>Legacy Hub (Stable)</h1>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <button id="themeBtn" class="toggle-btn" onclick="toggleTheme()">Switch to Dark Mode</button>
         </div>
     </header>
 
+    <hr />
+
     <section>
-        <h2>Web Search</h2>
-        <p class="note">DuckDuckGo Lite (Text-based)</p>
-        
+        <h2>Search Web</h2>
+        <p class="note">Text-only search. Reliable.</p>
         <form action="http://lite.duckduckgo.com/lite/" method="get" target="_blank">
-            <input type="text" name="q" placeholder="Type search here..." autocorrect="off">
-            <input type="submit" value="Search Web">
+            <input type="text" name="q" placeholder="Search..." autocapitalize="off" autocorrect="off">
+            <input type="submit" value="Search">
         </form>
     </section>
 
     <section>
         <h2>Wikipedia Reader</h2>
-        <p class="note">Strips images/layout via Textise. Searches via Wiki Index.</p>
-        
-        <form action="http://textise.net/showtext.aspx" method="get" target="_blank" onsubmit="return prepareWiki()">
-            
-            <input type="text" id="wikiInput" placeholder="Topic (e.g. Einstein)" autocorrect="off">
-            
+        <p class="note">Strips images. Works on iPad 1.</p>
+        <form action="http://textise.net/showtext.aspx" method="get" target="_blank" onsubmit="return submitWiki()">
+            <input type="text" id="wikiInput" placeholder="Topic (e.g. Planets)" autocapitalize="off">
             <input type="hidden" id="textiseUrl" name="strURL" value="">
-            
             <br>
-            <input type="submit" value="Read Wiki">
+            <input type="submit" value="Read Article">
         </form>
     </section>
 
     <section>
-    <h2>Video Player</h2>
-    <p class="note">Uses Invidious. Select '360p' quality for best results.</p>
-    
-    <form action="http://lite.duckduckgo.com/lite/" method="get" target="_blank" onsubmit="window.open('http://yewtu.be/search?q=' + document.getElementById('ytQ').value); return false;">
-        <input type="text" id="ytQ" placeholder="Search Video..." autocapitalize="off">
-        <input type="submit" value="Watch Video">
-    </form>
-    </section>
-
-    <section>
-        <h2>&#128295; System Patch (Fix SSL Errors)</h2>
-        <p class="note">If video or search fails with "Secure Connection", install this Certificate.</p>
+        <h2>Verified Apps</h2>
         <ul class="quick-links">
             <li>
-                <a href="http://cydia.invoxiplaygames.uk/certificates/" target="_blank" class="q-link" style="background-color: #ffecec; border-color: #ffb3b3; color: #cc0000;">
-                    1. Install ISRG Root X1 Certificate
+                <a href="http://68k.news" target="_blank" class="q-link">
+                    &#128240; Global News (68k News)
+                </a>
+            </li>
+            <li>
+                <a href="http://wttr.in/?format=3" target="_blank" class="q-link">
+                    &#9729; Weather (Text Only)
+                </a>
+            </li>
+            <li>
+                <a href="http://news.ycombinator.com" target="_blank" class="q-link">
+                    &#128187; Tech News (Hacker News)
                 </a>
             </li>
         </ul>
-        <p style="font-size: 11px; color: #666; margin-top: 5px;">
-            <strong>Instructions:</strong> Click the link &rarr; Tap "ISRG Root X1" &rarr; Tap "Install" &rarr; Confirm. <br>
-            Then restart Safari and try the video search below.
-        </p>
     </section>
 
-    <section>
-        <h2>&#127916; Video Player</h2>
-        <p class="note">Try this AFTER installing the patch above.</p>
-        
-        <form action="http://translate.google.com/translate" method="get" target="_blank">
-            <input type="hidden" name="sl" value="auto">
-            <input type="hidden" name="tl" value="en">
-            <input type="hidden" name="u" id="realVideoUrl" value="">
-            
-            <input type="text" id="vidQ" placeholder="Search Video..." autocapitalize="off">
-            <input type="submit" value="Watch (via Bridge)" onclick="document.getElementById('realVideoUrl').value = 'https://yewtu.be/search?q=' + document.getElementById('vidQ').value;">
-        </form>
-    </section>
-
-    <div style="margin-top:20px; text-align:center; font-size:11px; color:#aaa;">
-        v1.1 | iOS 5.1.1 Optimized
+    <div style="margin-top: 30px; text-align: center; font-size: 10px; color: #999;">
+        Legacy Hub v4 | Note: Video playback is not supported on this device.
     </div>
 
 </div>
