@@ -173,15 +173,6 @@
     </section>
 
     <section>
-        <h2>Quick Access</h2>
-        <ul class="quick-links">
-            <li><a href="http://lite.duckduckgo.com/lite/?q=latest+science+news" target="_blank" class="q-link">Science News</a></li>
-            <li><a href="http://lite.duckduckgo.com/lite/?q=world+history" target="_blank" class="q-link">World History</a></li>
-            <li><a href="http://lite.duckduckgo.com/lite/?q=diy+repair+guides" target="_blank" class="q-link">DIY & Repair</a></li>
-        </ul>
-    </section>
-
-    <section>
     <h2>Video Player</h2>
     <p class="note">Uses Invidious. Select '360p' quality for best results.</p>
     
@@ -189,6 +180,36 @@
         <input type="text" id="ytQ" placeholder="Search Video..." autocapitalize="off">
         <input type="submit" value="Watch Video">
     </form>
+    </section>
+
+    <section>
+        <h2>&#128295; System Patch (Fix SSL Errors)</h2>
+        <p class="note">If video or search fails with "Secure Connection", install this Certificate.</p>
+        <ul class="quick-links">
+            <li>
+                <a href="http://cydia.invoxiplaygames.uk/certificates/" target="_blank" class="q-link" style="background-color: #ffecec; border-color: #ffb3b3; color: #cc0000;">
+                    1. Install ISRG Root X1 Certificate
+                </a>
+            </li>
+        </ul>
+        <p style="font-size: 11px; color: #666; margin-top: 5px;">
+            <strong>Instructions:</strong> Click the link &rarr; Tap "ISRG Root X1" &rarr; Tap "Install" &rarr; Confirm. <br>
+            Then restart Safari and try the video search below.
+        </p>
+    </section>
+
+    <section>
+        <h2>&#127916; Video Player</h2>
+        <p class="note">Try this AFTER installing the patch above.</p>
+        
+        <form action="http://translate.google.com/translate" method="get" target="_blank">
+            <input type="hidden" name="sl" value="auto">
+            <input type="hidden" name="tl" value="en">
+            <input type="hidden" name="u" id="realVideoUrl" value="">
+            
+            <input type="text" id="vidQ" placeholder="Search Video..." autocapitalize="off">
+            <input type="submit" value="Watch (via Bridge)" onclick="document.getElementById('realVideoUrl').value = 'https://yewtu.be/search?q=' + document.getElementById('vidQ').value;">
+        </form>
     </section>
 
     <div style="margin-top:20px; text-align:center; font-size:11px; color:#aaa;">
